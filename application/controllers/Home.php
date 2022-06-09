@@ -9,11 +9,14 @@ class Home extends CI_Controller
         parent::__construct();
         $this->load->model(array('Mod_login'));
         $this->load->model(array('Mod_userlevel'));
+        $this->load->model(array('Mod_socialmedia'));
     }
 
     public function index()
     {
-        $this->load->view('frontend/index');
+        $data['socialmedia'] = $this->Mod_socialmedia->get_all();
+
+        $this->load->view('frontend/index', $data);
     } //end function index
 
     function login()

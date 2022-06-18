@@ -7,14 +7,23 @@ class Home extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Mod_login'));
-        $this->load->model(array('Mod_userlevel'));
-        $this->load->model(array('Mod_socialmedia'));
+        $this->load->model('Mod_login');
+        $this->load->model('Mod_userlevel');
+        $this->load->model('Mod_socialmedia');
+        $this->load->model('Mod_banner');
+        $this->load->model('Mod_tentang');
+        $this->load->model('Mod_bijiarabika');
     }
 
     public function index()
     {
         $data['socialmedia'] = $this->Mod_socialmedia->get_all();
+        $data['banner'] = $this->Mod_banner->get_all();
+        $data['tentang'] = $this->Mod_tentang->get_all();
+        $data['biji'] = $this->Mod_bijiarabika->get_all();
+
+        // echo '<pre>';
+        // echo print_r($data['banner']);
 
         $this->load->view('frontend/index', $data);
     } //end function index

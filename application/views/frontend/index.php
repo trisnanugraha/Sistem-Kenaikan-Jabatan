@@ -89,12 +89,11 @@
 
   <section class="home" id="beranda">
     <div class="content">
-      <h3>fresh coffee in the morning</h3>
+      <h3><?php echo $banner->judul; ?></h3>
       <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat
-        labore, sint cupiditate distinctio tempora reiciendis.
+      <?php echo $banner->deskripsi; ?>
       </p>
-      <a href="#" class="btn">get yours now</a>
+      <a href="<?php echo $banner->link; ?>" class="btn" target="_blank"><?php echo $banner->judul_tombol; ?></a>
     </div>
   </section>
 
@@ -107,23 +106,15 @@
 
     <div class="row">
       <div class="image">
-        <img src="<?php echo base_url(); ?>assets/images/about-img.jpeg" alt="" />
+        <img src="<?php echo base_url(); ?>assets/images/<?php echo $tentang->foto; ?>" alt="" />
       </div>
 
       <div class="content">
-        <h3>what makes our coffee special?</h3>
+        <h3><?php echo $tentang->judul; ?></h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Voluptatibus qui ea ullam, enim tempora ipsum fuga alias quae
-          ratione a officiis id temporibus autem? Quod nemo facilis
-          cupiditate. Ex, vel?
+        <?php echo $tentang->deskripsi; ?>
         </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odit amet
-          enim quod veritatis, nihil voluptas culpa! Neque consectetur
-          obcaecati sapiente?
-        </p>
-        <a href="#" class="btn">learn more</a>
+        <a href="<?php echo $tentang->link; ?>" class="btn"><?php echo $tentang->judul_tombol; ?></a>
       </div>
     </div>
   </section>
@@ -133,23 +124,15 @@
 
     <div class="row">
       <div class="image">
-        <img src="<?php echo base_url(); ?>assets/images/biji-kopi.jpg" alt="" />
+        <img src="<?php echo base_url(); ?>assets/images/<?php echo $biji->foto; ?>" alt="" />
       </div>
 
       <div class="content">
-        <h3>what makes our coffee special?</h3>
+        <h3><?php echo $biji->judul; ?></h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Voluptatibus qui ea ullam, enim tempora ipsum fuga alias quae
-          ratione a officiis id temporibus autem? Quod nemo facilis
-          cupiditate. Ex, vel?
+        <?php echo $biji->deskripsi; ?>
         </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odit amet
-          enim quod veritatis, nihil voluptas culpa! Neque consectetur
-          obcaecati sapiente?
-        </p>
-        <a href="#" class="btn">learn more</a>
+        <a href="<?php echo $biji->link; ?>" class="btn"><?php echo $biji->judul_tombol; ?></a>
       </div>
     </div>
   </section>

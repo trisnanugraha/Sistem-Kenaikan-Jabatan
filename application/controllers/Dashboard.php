@@ -15,7 +15,6 @@ class Dashboard extends MY_Controller
         $this->load->model('Mod_aktivasi_user');
         $this->load->model('Mod_userlevel');
         $this->load->model('Mod_dashboard');
-        $this->load->model('Mod_bulan');
         $this->load->model('Mod_produk');
         $this->load->model('Mod_pesan');
         // backButtonHandle();

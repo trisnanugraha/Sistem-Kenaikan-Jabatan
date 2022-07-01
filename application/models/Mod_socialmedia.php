@@ -116,4 +116,4 @@ class Mod_socialmedia extends CI_Model
     }
 }
 
-/* End of file Mod_isr.php */
+/* End of file Mod_socialmedia.php */

@@ -14,7 +14,7 @@ class Produk extends MY_Controller
     {
         $data['judul'] = 'Produk Kopi';
 
-        $data['modal_edit'] = show_my_modal('produk/modal_edit_produk', $data);
+        $data['modal_produk'] = show_my_modal('produk/modal_produk');
 
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {
@@ -46,7 +46,7 @@ class Produk extends MY_Controller
             $row[] = $produk->nama_produk;
             $row[] = $produk->foto_produk;
             $row[] = $produk->rating_produk;
-            $row[] = $produk->harga_produk;
+            $row[] = "Rp" . rupiah($produk->harga_produk);
             $row[] = $produk->diskon;
             $row[] = $produk->id_produk;
             $data[] = $row;
@@ -65,20 +65,45 @@ class Produk extends MY_Controller
     public function edit($id)
     {
 
-        $data = $this->Mod_bijiarabika->get_data($id);
+        $data = $this->Mod_produk->get_data($id);
         echo json_encode($data);
     }
 
     public function insert()
     {
         $this->_validate();
-
         $post = $this->input->post();
+        if (!empty($_FILES['foto']['name'])) {
+            $config['upload_path']   = './assets/images/';
+            $config['allowed_types'] = 'gif|jpg|jpeg|png'; //mencegah upload backdor
+            $config['max_size']      = '10240';
+            $config['max_width']     = '10240';
+            $config['max_height']    = '10240';
+            $config['file_name']     = $_FILES['foto']['name'];
 
-        $this->nama_cluster = $post['nama_cluster'];
+            $this->upload->initialize($config);
+            if ($this->upload->do_upload('foto')) {
 
-        $this->Mod_cluster->insert($this);
-        echo json_encode(array("status" => TRUE));
+                $gambar = $this->upload->data();
+
+                $this->nama_produk = $post['nama'];
+                $this->foto_produk = $gambar['file_name'];
+                $this->rating_produk = $post['rating'];
+                $this->harga_produk = $post['harga'];
+                $this->diskon = $post['diskon'];
+
+                $this->Mod_produk->insert($this);
+                echo json_encode(array("status" => TRUE));
+            }
+        } else {
+            $this->nama_produk = $post['nama'];
+            $this->rating_produk = $post['rating'];
+            $this->harga_produk = $post['harga'];
+            $this->diskon = $post['diskon'];
+
+            $this->Mod_produk->insert($this);
+            echo json_encode(array("status" => TRUE));
+        }
     }
 
     public function update()
@@ -99,38 +124,38 @@ class Produk extends MY_Controller
 
                 $gambar = $this->upload->data();
 
-                $this->judul = $post['judul'];
-                $this->deskripsi = $post['deskripsi'];
-                $this->judul_tombol = $post['tombol'];
-                $this->link = $post['link'];
-                $this->foto = $gambar['file_name'];
+                $this->nama_produk = $post['nama'];
+                $this->foto_produk = $gambar['file_name'];
+                $this->rating_produk = $post['rating'];
+                $this->harga_produk = $post['harga'];
+                $this->diskon = $post['diskon'];
 
-                $temp = $this->Mod_bijiarabika->get_foto($id)->row_array();
+                $temp = $this->Mod_produk->get_foto($id)->row_array();
 
                 if ($temp != null) {
                     //hapus gambar yg ada diserver
-                    unlink('./assets/images/' . $temp['foto']);
+                    unlink('./assets/images/' . $temp['foto_produk']);
                 }
 
-                $this->Mod_bijiarabika->update($id, $this);
+                $this->Mod_produk->update($id, $this);
                 echo json_encode(array("status" => TRUE));
             }
         } else {
-            $this->judul = $post['judul'];
-            $this->deskripsi = $post['deskripsi'];
-            $this->judul_tombol = $post['tombol'];
-            $this->link = $post['link'];
+            $this->nama_produk = $post['nama'];
+            $this->rating_produk = $post['rating'];
+            $this->harga_produk = $post['harga'];
+            $this->diskon = $post['diskon'];
 
-            $this->Mod_bijiarabika->update($id, $this);
+            $this->Mod_produk->update($id, $this);
             echo json_encode(array("status" => TRUE));
         }
     }
 
     public function delete()
     {
-        $id = $this->input->post('id_cluster');
+        $id = $this->input->post('id');
 
-        $this->Mod_cluster->delete($id);
+        $this->Mod_produk->delete($id);
         echo json_encode(array("status" => TRUE));
     }
 
@@ -141,27 +166,21 @@ class Produk extends MY_Controller
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if ($this->input->post('judul') == '') {
-            $data['inputerror'][] = 'judul';
-            $data['error_string'][] = 'Judul Tidak Boleh Kosong';
+        if ($this->input->post('nama') == '') {
+            $data['inputerror'][] = 'nama';
+            $data['error_string'][] = 'Nama Produk Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
-        if ($this->input->post('deskripsi') == '') {
-            $data['inputerror'][] = 'deskripsi';
-            $data['error_string'][] = 'Deskripsi Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
+        // if ($this->input->post('foto') == '') {
+        //     $data['inputerror'][] = 'foto';
+        //     $data['error_string'][] = 'Foto Produk Tidak Boleh Kosong';
+        //     $data['status'] = FALSE;
+        // }
 
-        if ($this->input->post('tombol') == '') {
-            $data['inputerror'][] = 'tombol';
-            $data['error_string'][] = 'Judul Tombol Tidak Boleh Kosong';
-            $data['status'] = FALSE;
-        }
-
-        if ($this->input->post('link') == '') {
-            $data['inputerror'][] = 'link';
-            $data['error_string'][] = 'Link Tombol Tidak Boleh Kosong';
+        if ($this->input->post('harga') == '') {
+            $data['inputerror'][] = 'harga';
+            $data['error_string'][] = 'Harga Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
@@ -172,4 +191,4 @@ class Produk extends MY_Controller
     }
 }
 
-/* End of file Cluster.php */
+/* End of file Produk.php */

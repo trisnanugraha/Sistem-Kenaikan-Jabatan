@@ -13,6 +13,10 @@ class Home extends CI_Controller
         $this->load->model('Mod_banner');
         $this->load->model('Mod_tentang');
         $this->load->model('Mod_bijiarabika');
+        $this->load->model('Mod_produk');
+        $this->load->model('Mod_testimonial');
+        $this->load->model('Mod_artikel');
+        $this->load->model('Mod_pesan');
     }
 
     public function index()
@@ -21,12 +25,34 @@ class Home extends CI_Controller
         $data['banner'] = $this->Mod_banner->get_all();
         $data['tentang'] = $this->Mod_tentang->get_all();
         $data['biji'] = $this->Mod_bijiarabika->get_all();
+        $data['produk'] = $this->Mod_produk->get_all();
+        $data['testimonial'] = $this->Mod_testimonial->get_all();
+        $data['artikel'] = $this->Mod_artikel->get_all();
+        $i = 0;
+        foreach ($data['produk'] as $produk) {
+            $diskon =  $produk->harga_produk *  $produk->diskon / 100;
+            $produk->diskon = $produk->harga_produk - $diskon;
+            $i++;
+        }
+
 
         // echo '<pre>';
-        // echo print_r($data['banner']);
+        // echo print_r($data['produk']);
 
         $this->load->view('frontend/index', $data);
     } //end function index
+
+    function kirim()
+    {
+        $post = $this->input->post();
+        $this->nama_pengirim = $post['nama'];
+        $this->email = $post['email'];
+        $this->no_hp = $post['no_hp'];
+        $this->pesan = $post['pesan'];
+
+        $this->Mod_pesan->insert($this);
+        echo json_encode(array("status" => TRUE));
+    }
 
     function login()
     {

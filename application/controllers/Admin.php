@@ -132,4 +132,4 @@ class Admin extends CI_Controller
     }
 }
 
-/* End of file Login.php */
+/* End of file Admin.php */

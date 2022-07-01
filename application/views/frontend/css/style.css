@@ -37,6 +37,10 @@ html::-webkit-scrollbar-thumb{
     border-radius: 5rem;
 }
 
+#article-content {
+    color: white;
+}
+
 body{
     background: var(--bg);
 }

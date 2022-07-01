@@ -20,32 +20,17 @@ class Dashboard extends MY_Controller
         $this->load->model('Mod_cluster');
         $this->load->model('Mod_dashboard');
         $this->load->model('Mod_bulan');
+        $this->load->model('Mod_produk');
+        $this->load->model('Mod_pesan');
         // backButtonHandle();
     }
 
     function index()
     {
         $data['judul'] = 'Dashboard';
-        $data['kegiatan'] = $this->Mod_kegiatan->total_rows();
-        $data['arsip'] = $this->Mod_arsip->total_rows();
-        $data['isr'] = $this->Mod_isr->total_rows();
-        $data['cluster'] = $this->Mod_cluster->total_rows();
-        // $tahun = $this->Mod_kegiatan->get_tahun();
-
-        // foreach ($tahun as $row) {
-        //     $data = explode('-', $row['tanggal']);
-        //     $th[] = $data[0];
-        // }
-
-        // echo json_encode($th);
-
-        $data['filterTahun'] = $this->db->select('DISTINCT DATE_FORMAT(`t`.`tanggal`, "%Y") `tahun`', FALSE)->from('tbl_kegiatan `t`')->group_by('YEAR(`t`.`tanggal`)')->order_by('t.tanggal', 'DESC')->get()->result();
-
-
-        // echo '<pre>';
-        // print_r($data['grafik']);
-        // print_r($data['filterTahun']);
-
+        $data['produk'] = $this->Mod_produk->total_rows();
+        $data['pesan'] = $this->Mod_produk->total_rows();
+       
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {
             redirect('login');

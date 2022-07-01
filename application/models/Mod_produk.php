@@ -73,7 +73,7 @@ class Mod_produk extends CI_Model
     function get_all()
     {
         return $this->db->get($this->table)
-            ->row();
+            ->result();
     }
 
     function get_data_isr($id)
@@ -87,7 +87,7 @@ class Mod_produk extends CI_Model
 
     function get_data($id)
     {
-        $this->db->where('id_biji', $id);
+        $this->db->where('id_produk', $id);
         return $this->db->get($this->table)->row();
     }
 
@@ -99,13 +99,13 @@ class Mod_produk extends CI_Model
 
     function update($id, $data)
     {
-        $this->db->where('id_biji', $id);
+        $this->db->where('id_produk', $id);
         $this->db->update($this->table, $data);
     }
 
     function delete($id)
     {
-        $this->db->where('id_isr', $id);
+        $this->db->where('id_produk', $id);
         $this->db->delete($this->table);
     }
 
@@ -117,11 +117,11 @@ class Mod_produk extends CI_Model
 
     function get_foto($id)
     {
-        $this->db->select('foto');
+        $this->db->select('foto_produk');
         $this->db->from($this->table);
-        $this->db->where('id_biji', $id);
+        $this->db->where('id_produk', $id);
         return $this->db->get();
     }
 }
 
-/* End of file Mod_isr.php */
+/* End of file Mod_produk.php */

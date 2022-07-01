@@ -6,7 +6,4 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['admin'] = 'admin/index';
-$route['social-media'] = 'socialmedia/index';
-$route['info-biji-kopi'] = 'bijiarabika/index';
-$route['produk-kopi'] = 'produk/index';
 

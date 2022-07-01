@@ -14,10 +14,6 @@ class Dashboard extends MY_Controller
         $this->load->model('Mod_userlevel');
         $this->load->model('Mod_aktivasi_user');
         $this->load->model('Mod_userlevel');
-        $this->load->model('Mod_kegiatan');
-        $this->load->model('Mod_arsip');
-        $this->load->model('Mod_isr');
-        $this->load->model('Mod_cluster');
         $this->load->model('Mod_dashboard');
         $this->load->model('Mod_bulan');
         $this->load->model('Mod_produk');

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class SocialMedia extends MY_Controller
+class Socialmedia extends MY_Controller
 {
 
     public function __construct()

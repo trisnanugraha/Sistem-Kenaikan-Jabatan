@@ -7,39 +7,19 @@ class Home extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_login');
-        $this->load->model('Mod_userlevel');
-        $this->load->model('Mod_socialmedia');
-        $this->load->model('Mod_banner');
-        $this->load->model('Mod_tentang');
-        $this->load->model('Mod_bijiarabika');
-        $this->load->model('Mod_produk');
-        $this->load->model('Mod_testimonial');
-        $this->load->model('Mod_artikel');
-        $this->load->model('Mod_pesan');
+        $this->load->model('Mod_akun');
     }
 
     public function index()
     {
-        $data['socialmedia'] = $this->Mod_socialmedia->get_all();
-        $data['banner'] = $this->Mod_banner->get_all();
-        $data['tentang'] = $this->Mod_tentang->get_all();
-        $data['biji'] = $this->Mod_bijiarabika->get_all();
-        $data['produk'] = $this->Mod_produk->get_all();
-        $data['testimonial'] = $this->Mod_testimonial->get_all();
-        $data['artikel'] = $this->Mod_artikel->get_all();
-        $i = 0;
-        foreach ($data['produk'] as $produk) {
-            $diskon =  $produk->harga_produk *  $produk->diskon / 100;
-            $produk->diskon = $produk->harga_produk - $diskon;
-            $i++;
+        $logged_in = $this->session->userdata('logged_in');
+        if ($logged_in == TRUE) {
+            redirect('dashboard');
+        } else {
+            $data['modal_daftar'] = show_my_modal('modal_daftar');
+            $data['modal_login'] = show_my_modal('modal_login');
+            $this->load->view('v_home', $data);
         }
-
-
-        // echo '<pre>';
-        // echo print_r($data['produk']);
-
-        $this->load->view('frontend/index', $data);
     } //end function index
 
     function kirim()
@@ -54,75 +34,62 @@ class Home extends CI_Controller
         echo json_encode(array("status" => TRUE));
     }
 
+
+
+    function simpan()
+    {
+        $this->_validate_register();
+        $email = $this->input->post('email');
+        $cek = $this->Mod_akun->cekEmail($email);
+        if ($cek->num_rows() > 0) {
+            echo json_encode(array("error" => "Email Sudah Ada!!"));
+        } else {
+            $save  = array(
+                'nama_lengkap' => $this->input->post('nama'),
+                'email' => $this->input->post('email'),
+                'nip' => $this->input->post('nip'),
+                'password'  => get_hash($this->input->post('password')),
+            );
+
+            $this->Mod_akun->insert($save);
+
+            echo json_encode(array("status" => TRUE));
+        }
+    }
+
     function login()
     {
-
         $this->_validate();
         //cek username database
-        $username = anti_injection($this->input->post('username'));
-        $status = $this->Mod_login->check_status($username);
+        $email = anti_injection($this->input->post('email'));
 
-        if ($this->Mod_login->check_db($username)->num_rows() == 1) {
-            if ($status->is_active != 'N') {
-                $db = $this->Mod_login->check_db($username)->row();
-                $apl = $this->Mod_login->Aplikasi()->row();
+        if ($this->Mod_akun->checkUser($email)->num_rows() == 1) {
+            $db = $this->Mod_akun->checkUser($email)->row();
 
-                if (hash_verified(anti_injection($this->input->post('password')), $db->password)) {
-                    //cek username dan password yg ada di database
-                    $userdata = array(
-                        'id_user'  => $db->id_user,
-                        'username'    => ucfirst($db->username),
-                        'user_name'    => $db->username,
-                        'full_name'   => ucfirst($db->full_name),
-                        'password'    => $db->password,
-                        'id_level'    => $db->id_level,
-                        'aplikasi'    => $apl->nama_aplikasi,
-                        'title'       => $apl->title,
-                        'logo'        => $apl->logo,
-                        'nama_owner'     => $apl->nama_owner,
-                        'image'       => $db->image,
-                        'logged_in'    => TRUE,
-                        'hak_akses' => ''
-                    );
-
-                    $checklevel = $this->_cek_status($userdata['id_level']);
-
-                    if ($checklevel == 'Admin') {
-                        $data['url'] = 'dashboard';
-                        $userdata['hak_akses'] = 'Admin';
-                    } else if ($checklevel == 'Guest') {
-                        $data['url'] = 'dashboard';
-                        $userdata['hak_akses'] = 'Guest';
-                    }
-
-                    $this->session->set_userdata($userdata);
-                    $data['status'] = TRUE;
-                    echo json_encode($data);
-                } else {
-
-                    $data['pesan'] = "Username atau Password Salah!";
-                    $data['error'] = TRUE;
-                    echo json_encode($data);
-                }
+            if (hash_verified(anti_injection($this->input->post('password')), $db->password)) {
+                //cek username dan password yg ada di database
+                $userdata = array(
+                    'id_akun'  => $db->id_akun,
+                    'nama'    => $db->nama_lengkap,
+                    'email'    => $db->email,
+                    'nip'    => $db->nip,
+                    'password'    => $db->password,
+                    'logged_in'    => TRUE
+                );
+                $data['url'] = 'dashboard';
+                $this->session->set_userdata($userdata);
+                $data['status'] = TRUE;
+                echo json_encode($data);
             } else {
-                $data['pesan'] = "Akun Anda belum aktif, silakan hubungi Administrator";
+                $data['pesan'] = "Email atau Password Salah!";
                 $data['error'] = TRUE;
                 echo json_encode($data);
             }
         } else {
-            $data['pesan'] = "Username atau Password belum terdaftar!";
+            $data['pesan'] = "Email Anda Belum Terdaftar!";
             $data['error'] = TRUE;
             echo json_encode($data);
         }
-    }
-
-    public function logout()
-    {
-        $this->session->sess_destroy();
-        $this->load->driver('cache');
-        $this->cache->clean();
-        ob_clean();
-        redirect('login');
     }
 
     private function _validate()
@@ -132,15 +99,64 @@ class Home extends CI_Controller
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if ($this->input->post('username') == '') {
-            $data['inputerror'][] = 'username';
-            $data['error_string'][] = 'Username is required';
+        if ($this->input->post('email') == '') {
+            $data['inputerror'][] = 'email';
+            $data['error_string'][] = 'Email Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
         if ($this->input->post('password') == '') {
             $data['inputerror'][] = 'password';
-            $data['error_string'][] = 'Password is required';
+            $data['error_string'][] = 'Password Tidak Boleh Kosong';
+            $data['status'] = FALSE;
+        }
+
+        if ($data['status'] === FALSE) {
+            echo json_encode($data);
+            exit();
+        }
+    }
+
+    private function _validate_register()
+    {
+        $data = array();
+        $data['error_string'] = array();
+        $data['inputerror'] = array();
+        $data['status'] = TRUE;
+
+        if ($this->input->post('nama') == '') {
+            $data['inputerror'][] = 'nama';
+            $data['error_string'][] = 'Nama Lengkap Tidak Boleh Kosong';
+            $data['status'] = FALSE;
+        }
+
+        if ($this->input->post('email') == '') {
+            $data['inputerror'][] = 'email';
+            $data['error_string'][] = 'Email Tidak Boleh Kosong';
+            $data['status'] = FALSE;
+        }
+
+        if ($this->input->post('nip') == '') {
+            $data['inputerror'][] = 'nip';
+            $data['error_string'][] = 'NIP Tidak Boleh Kosong';
+            $data['status'] = FALSE;
+        }
+
+        if ($this->input->post('password') == '') {
+            $data['inputerror'][] = 'password';
+            $data['error_string'][] = 'Password Tidak Boleh Kosong';
+            $data['status'] = FALSE;
+        }
+
+        if ($this->input->post('verify_pass') == '') {
+            $data['inputerror'][] = 'verify_pass';
+            $data['error_string'][] = 'Verifikasi Password Tidak Boleh Kosong';
+            $data['status'] = FALSE;
+        }
+
+        if ($this->input->post('password') != '' && $this->input->post('verify_pass') != '' && $this->input->post('password') != $this->input->post('verify_pass')) {
+            $data['inputerror'][] = 'verify_pass';
+            $data['error_string'][] = 'Verifikasi Password Tidak Cocok Dengan Password';
             $data['status'] = FALSE;
         }
 
@@ -157,4 +173,4 @@ class Home extends CI_Controller
     }
 }
 
-/* End of file Login.php */
+/* End of file Home.php */

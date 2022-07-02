@@ -18,10 +18,7 @@ class Mod_login extends CI_Model
         return $this->db->get("tbl_user");
     }
 
-    function check_db($username)
-    {
-        return $this->db->get_where('tbl_user', array('username' => $username));
-    }
+    
 
     function get_prodi($username)
     {

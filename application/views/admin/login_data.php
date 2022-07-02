@@ -26,142 +26,179 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.css">
+  <style>
+    .login-box {
+      width: auto;
+      text-align: center;
+    }
+
+    .btn-style {
+      margin: 0 20px;
+      width: 150px;
+      background-color: #98B909;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .btn-form {
+      margin: 0 20px;
+      width: 150px;
+      font-size: 1.2rem;
+    }
+
+    .btn-style:hover {
+      background-color: #698009;
+      color: #fff;
+    }
+  </style>
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" style="background-color: #00CF17;">
+
   <div class="login-box">
-    <!-- /.login-logo -->
-    <div class="card card-outline card-primary">
-      <div class="card-header text-center">
-        <a href="<?php echo base_url(); ?>" class="h1"><b><?php echo $aplikasi->nama_aplikasi; ?></b></a>
-      </div>
-      <div class="card-body">
-        <p class="login-box-msg">Silakan masuk untuk akses <?php echo $aplikasi->nama_aplikasi; ?></p>
-        <form action="" role="form" id="quickForm" method="post">
-          <label for="username">Username</label>
-          <div class="input-group mb-3 kosong">
-            <input type="text" name="username" class="form-control" placeholder="Username" value="<?php echo set_value('username'); ?>">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-user"></span>
-              </div>
-            </div>
-          </div>
-          <label for="username">Password</label>
-          <div class="input-group mb-3 kosong">
-            <input type="password" class="form-control" name="password" placeholder="Password" value="<?php echo set_value('password'); ?>">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <!-- <div class="col-8">
-            <div class="icheck-primary">
-              <input type="checkbox" id="remember">
-              <label for="remember">
-                Remember Me
-              </label>
-            </div>
-          </div> -->
-            <!-- /.col -->
-            <div class="col-4">
-              <button type="submit" id="login" class="btn btn-primary btn-block">Masuk</button>
-            </div>
-
-            <!-- /.col -->
-          </div>
-          <!-- <br>
-          <p class="mb-1 text-center">
-            <a href="<?php echo base_url('register'); ?>">Belum Punya Akun? Daftar Gratis</a>
-          </p> -->
-        </form>
-
-
-        <!-- <div class="social-auth-links text-center mt-2 mb-3">
-        <a href="#" class="btn btn-block btn-primary">
-          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-        </a>
-        <a href="#" class="btn btn-block btn-danger">
-          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-        </a>
-      </div> -->
-        <!-- /.social-auth-links -->
-
-        <!-- <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
-      </p> -->
-        <!-- <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
-      </p> -->
-      </div>
-      <?php
-      if (!empty($pesan)) {
-        echo $pesan;
-      } ?>
-      <div class="card-footer" style="text-align: center;">
-        <b>
-          <?php
-          // foreach ($aplikasi as $apl) {
-          echo $aplikasi->copy_right . ' ' . $aplikasi->tahun . ' | ' . $aplikasi->nama_owner;
-          // }
-
-          ?>
-        </b>
-      </div>
-      <!-- /.card-body -->
+    <img src="<?php echo base_url(); ?>/assets/foto/logo-labuhan-batu.png" height="300px" alt="">
+    <h3 style="margin-top: 20px; color: #fff;">Pendaftaran Penaikan Jabatan</h3>
+    <div style="margin-top: 50px;">
+      <button type="button" class="btn btn-success btn-style">Bantuan</button>
+      <button type="button" class="btn btn-success btn-style" onclick="daftar()">Daftar</button>
+      <button type="button" class="btn btn-success btn-style">Login</button>
     </div>
+    <!-- /.login-logo -->
     <!-- /.card -->
   </div>
-  <!-- /.login-box -->
-  <!-- jQuery -->
-  <script src="<?php echo base_url(); ?>assets/plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="<?php echo base_url(); ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- jquery-validation -->
-  <script src="<?php echo base_url(); ?>assets/plugins/jquery-validation/jquery.validate.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/plugins/jquery-validation/additional-methods.min.js"></script>
-  <!-- AdminLTE App -->
-  <script src="<?php echo base_url(); ?>assets/dist/js/adminlte.min.js"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="<?php echo base_url(); ?>assets/dist/js/demo.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="<?php echo base_url(); ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
-  <!-- Toastr -->
-  <script src="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.js"></script>
+  <!-- Bootstrap modal -->
+  <div class="modal fade" id="modal_daftar" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background-color: #00CF17;">
+
+        <div class="modal-header">
+          <h3 class="modal-title" style="color: #fff;">Form</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+
+        </div>
+        <div class="modal-body modal_daftar">
+          <form action="#" id="form_daftar" class="form-horizontal">
+            <input type="hidden" value="" name="id" />
+            <div class="form-group row">
+              <label for="nama" class="col-sm-3 col-form-label text-white">Nama Lengkap</label>
+              <div class="col-sm-9 kosong">
+                <input type="text" class="form-control" name="nama" id="nama">
+              </div>
+            </div>
+            <div class="form-group row ">
+              <label for="nip" class="col-sm-3 col-form-label text-white">NIP</label>
+              <div class="col-sm-9 kosong">
+                <input type="text" class="form-control" name="nip" id="nip">
+              </div>
+            </div>
+            <div class="form-group row ">
+              <label for="email" class="col-sm-3 col-form-label text-white">Email</label>
+              <div class="col-sm-9 kosong">
+                <input type="email" class="form-control" name="email" id="email">
+              </div>
+            </div>
+            <div class="form-group row ">
+              <label for="password" class="col-sm-3 col-form-label text-white">Password</label>
+              <div class="col-sm-9 kosong">
+                <input type="password" class="form-control" name="password" id="password">
+              </div>
+            </div>
+            <div class="form-group row ">
+              <label for="verify_pass" class="col-sm-3 col-form-label text-white">Verifikasi Password</label>
+              <div class="col-sm-9 kosong">
+                <input type="password" class="form-control" name="verify_pass" id="verify_pass">
+              </div>
+            </div>
+
+          </form>
+          <div class="modal-footer justify-content-between">
+            <button type="button" id="btn_simpan" onclick="simpan()" class="btn btn-style">Daftar</button>
+            <button type="button" id="btn_batal" class="btn btn-default btn-form" onclick="batal()" data-dismiss="modal">Keluar</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- End Bootstrap modal -->
+    <!-- End Bootstrap modal -->
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="<?php echo base_url(); ?>assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="<?php echo base_url(); ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jquery-validation -->
+    <script src="<?php echo base_url(); ?>assets/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/plugins/jquery-validation/additional-methods.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="<?php echo base_url(); ?>assets/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="<?php echo base_url(); ?>assets/dist/js/demo.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="<?php echo base_url(); ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- Toastr -->
+    <script src="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.js"></script>
 
 
-  <script>
-    $("#quickForm").submit(function(e) {
-      e.preventDefault();
-      $.ajax({
-        url: '<?php echo base_url('login/login') ?>',
-        type: 'POST',
-        data: $('#quickForm').serialize(),
-        dataType: 'JSON',
-        success: function(data) {
-          if (data.status) {
-            toastr.success('Login Berhasil!');
-            var url = data.url;
-            window.location = url;
-          } else if (data.error) {
-            toastr.error(
-              data.pesan
-            );
-          } else {
-            for (var i = 0; i < data.inputerror.length; i++) {
-              $('[name="' + data.inputerror[i] + '"]').addClass('is-invalid');
-              $('[name="' + data.inputerror[i] + '"]').closest('.kosong').append('<span></span>');
-              $('[name="' + data.inputerror[i] + '"]').next().next().text(data.error_string[i]).addClass('invalid-feedback');
+    <script type="text/javascript">
+      function daftar() {
+        $('.modal-title').text('Daftar Akun Baru');
+        $('#modal_daftar').modal('show'); // show bootstrap modal
+      }
+
+      function simpan() {
+        $('#btn_simpan').text('Menyimpan...'); //change button text
+        $('#btn_simpan').attr('disabled', true); //set button disable 
+        var url = "<?php echo site_url('daftar/simpan') ?>";;
+
+        var formdata = new FormData($('#form_daftar')[0]);
+        // ajax adding data to database
+        $.ajax({
+          url: url,
+          type: "POST",
+          data: formdata,
+          dataType: "JSON",
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(data) {
+
+            if (data.status) //if success close modal and reload ajax table
+            {
+              $('#modal_daftar').modal('hide');
+              Toast.fire({
+                icon: 'success',
+                title: 'Data Produk Berhasil Disimpan!'
+              });
+            } else {
+              for (var i = 0; i < data.inputerror.length; i++) {
+                $('[name="' + data.inputerror[i] + '"]').addClass('is-invalid');
+                $('[name="' + data.inputerror[i] + '"]').closest('.kosong').append('<span></span>');
+                $('[name="' + data.inputerror[i] + '"]').next().text(data.error_string[i]).addClass('invalid-feedback');
+              }
             }
-          }
-        }
-      });
+            $('#btn_simpan').text('Simpan'); //change button text
+            $('#btn_batal').text('Keluar'); //change button text
+            $('#btn_simpan').attr('disabled', false); //set button enable 
 
-    });
-  </script>
+
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert('Error adding / update data');
+            $('#btn_simpan').text('Simpan'); //change button text
+            $('#btn_batal').text('Keluar'); //change button text
+            $('#btn_simpan').attr('disabled', false); //set button enable 
+
+          }
+        });
+      }
+
+      function batal() {
+        $('#form_daftar')[0].reset();
+      }
+    </script>
 </body>
 
 </html>
